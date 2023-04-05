@@ -38,11 +38,11 @@ class App extends React.Component {
     };
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     this.setState({ taskdescription: event.target.value });
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     console.log("Sending task description to Spring-Server: "+this.state.taskdescription);
     fetch("http://localhost:8080/tasks", { 
@@ -63,27 +63,24 @@ class App extends React.Component {
     .catch(error => console.log(error))
   }
 
-  handleClick = taskdescription => {
-  console.log("Sending task description to delete on Spring-Server: "+taskdescription);
-  fetch(`http://localhost:8080/delete`, { // API endpoint (the complete URL!) to delete an existing taskdescription in the list
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ taskdescription: taskdescription })
-  })
-  .then(response => {
-    console.log("Receiving answer after deleting on Spring-Server: ");
-    console.log(response);
-    window.location.href = "/"; 
-  })
-  .catch(error => console.log(error))
-}
+  handleClick = (taskdescription) => {
+    console.log("Sending task description to delete on Spring-Server: "+taskdescription);
+    fetch(`http://localhost:8080/delete`, { // API endpoint (the complete URL!) to delete an existing taskdescription in the list
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ taskdescription: taskdescription })
+    })
+    .then(response => {
+      console.log("Receiving answer after deleting on Spring-Server: ");
+      console.log(response);
+      window.location.href = "/"; 
+    })
+    .catch(error => console.log(error))
+  }
 
-  
-}
-
-function renderTasks(todos) {
+renderTasks = (todos) => {
   return (
     <ul>
       {todos.map((todo, index) => (
@@ -96,7 +93,7 @@ function renderTasks(todos) {
   );
 }
 
-function componentDidMount() {
+componentDidMount = () => {
   fetch("http://localhost:8080")    // API endpoint (the complete URL!) to get a taskdescription-list
     .then(response => response.json())
     .then(data => {
@@ -107,7 +104,7 @@ function componentDidMount() {
     .catch(error => console.log(error))
 }
 
-function render() {
+render = () => {
   return (
     <div className="App">
       <header className="App-header">
@@ -130,5 +127,5 @@ function render() {
     </div>
   );
 }
-
+}
 export default App;

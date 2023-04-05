@@ -23,13 +23,19 @@ public class TaskController {
     
     @CrossOrigin
     @GetMapping
-    public ResponseEntity<Iterable<Task>> getAllTasks() {
+    public ResponseEntity<Iterable<Task>> getAllTasksV1() {
+
+        return ResponseEntity.ok(taskRepository.findAll()); // actual task list (internally converted to a JSON stream)
+    }
+    
+    @GetMapping("/v2")
+    public ResponseEntity<Iterable<Task>> getAllTasksV2() {
 
         return ResponseEntity.ok(taskRepository.findAll()); // actual task list (internally converted to a JSON stream)
     }
 
     @CrossOrigin
-    @PostMapping("/v1")// Map ONLY Post Requests
+    @PostMapping// Map ONLY Post Requests
     public ResponseEntity<String> addTaskV1(@Valid @RequestBody TodoRequest taskRequest) {
             System.out.println("API EP '/add': '" + taskRequest.getTaskdescription() + "'");
             taskRepository.save(new Task(taskRequest.getTaskdescription()));
@@ -43,13 +49,4 @@ public class TaskController {
             return ResponseEntity.ok("Added new Task");
     }
 
-    /*
-    @CrossOrigin
-    @PostMapping
-    public ResponseEntity<String> delTask(@RequestBody TodoRequest taskRequest){
-        System.out.println("API EP '/delete': '" + taskRequest.getTaskdescription() + "'");
-        taskRepository.deleteByTaskdescription(taskRequest.getTaskdescription());
-        return ResponseEntity.ok("redirect/");
-    } 
-    */
 }
