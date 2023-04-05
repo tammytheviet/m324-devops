@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
  */
 
 @Entity
-@Table(name="/task")
+@Table(name="task")
 public class Task {
 	
 	@Id

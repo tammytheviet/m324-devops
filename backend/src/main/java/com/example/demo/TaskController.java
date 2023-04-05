@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.requests.TodoRequest;
 
 import jakarta.validation.Valid;
-@CrossOrigin
+@CrossOrigin(origins = "localhost:8080")
 @RequestMapping(path = "/task")
 @RestController
 public class TaskController {

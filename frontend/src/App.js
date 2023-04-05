@@ -38,19 +38,19 @@ class App extends React.Component {
     };
   }
 
-  handleChange = (event) => {
+  handleChange = event => {
     this.setState({ taskdescription: event.target.value });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = event => {
     event.preventDefault();
     console.log("Sending task description to Spring-Server: "+this.state.taskdescription);
-    fetch("http://localhost:8080/tasks", { 
+    fetch("http://localhost:8080/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ taskdescription: this.state.taskdescription }) 
+      body: JSON.stringify({ taskdescription: this.state.taskdescription })
     })
     .then(response => {
       console.log("Receiving answer after sending to Spring-Server: ");
@@ -63,9 +63,20 @@ class App extends React.Component {
     .catch(error => console.log(error))
   }
 
-  handleClick = (taskdescription) => {
+  componentDidMount() {
+    fetch("http://localhost:8080")    // API endpoint (the complete URL!) to get a taskdescription-list
+      .then(response => response.json())
+      .then(data => {
+        console.log("Receiving task list data from Spring-Server: ");
+        console.log(data);
+        this.setState({todos: data});
+      })
+      .catch(error => console.log(error))
+  }
+
+  handleClick = taskdescription => {
     console.log("Sending task description to delete on Spring-Server: "+taskdescription);
-    fetch(`http://localhost:8080/delete`, { // API endpoint (the complete URL!) to delete an existing taskdescription in the list
+    fetch(`http://localhost:8080/delete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -80,52 +91,43 @@ class App extends React.Component {
     .catch(error => console.log(error))
   }
 
-renderTasks = (todos) => {
-  return (
-    <ul>
-      {todos.map((todo, index) => (
-        <li key={todo.taskdescription}>
-          {"Task " + (index+1) + ": "+ todo.taskdescription}
-          <button onClick={this.handleClick.bind(this, todo.taskdescription)}>Done</button>
-        </li>
-      ))}
-    </ul>
-  );
+  renderTasks(todos) {
+    return (
+      <ul>
+        {todos.map((todo, index) => (
+          <li key={todo.taskdescription}>
+            {"Task " + (index+1) + ": "+ todo.taskdescription}
+            <button onClick={this.handleClick.bind(this, todo.taskdescription)}>Done</button>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <img src={logo} className="App-logo" alt="logo" />
+          <h1>
+            ToDo Liste
+          </h1>
+          <form onSubmit={this.handleSubmit}>
+            <input
+              type="text"
+              value={this.state.taskdescription}
+              onChange={this.handleChange}
+            />
+            <button type="submit">Absenden</button>
+          </form>
+          <div>
+            {this.renderTasks(this.state.todos)}
+          </div>
+        </header>
+      </div>
+    );
+  }
+
 }
 
-componentDidMount = () => {
-  fetch("http://localhost:8080")    // API endpoint (the complete URL!) to get a taskdescription-list
-    .then(response => response.json())
-    .then(data => {
-      console.log("Receiving task list data from Spring-Server: ");
-      console.log(data);
-      this.setState({todos: data});  // set the whole list at once
-    })
-    .catch(error => console.log(error))
-}
-
-render = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h1>
-          ToDo Liste
-        </h1>
-        <form onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            value={this.state.taskdescription}
-            onChange={this.handleChange}
-          />
-          <button type="submit">Absenden</button>
-        </form>
-        <div>
-          {this.renderTasks(this.state.todos)}
-        </div>
-      </header>
-    </div>
-  );
-}
-}
 export default App;
