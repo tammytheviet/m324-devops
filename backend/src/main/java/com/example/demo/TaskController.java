@@ -13,7 +13,7 @@ import com.example.demo.requests.TodoRequest;
 
 import jakarta.validation.Valid;
 @CrossOrigin
-@RequestMapping(path = "/task")
+@RequestMapping(path = "task")
 @RestController
 public class TaskController {
 
